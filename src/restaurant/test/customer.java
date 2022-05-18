@@ -16,103 +16,104 @@ import restaurant.test.DBmanager;
  */
 public class customer {
     
-     private String username;
-    private String password;
-    private String email;
-    private String phone_no;
-    private String gender;
-    private int age;
-    private int ID;
+     private String customer_username;
+    private String customer_password;
+    private String customer_email;
+    private String customer_phone_no;
+    private String customer_gender;
+    private int customer_age;
+    private int customer_ID;
+    
+    public  customer(){}
     
      private DBmanager dbManager = DBmanager.createInstance();
      private static customer instance;
      
      public static customer getInstance(){
      if(instance==null){
-     instance= new customer();
+     instance= new customer();     //design pattern //
      }
          return instance;
      
      }
 
     public String getUsername() {
-        return username;
+        return customer_username;
     }
 
     public String getPassword() {
-        return password;
+        return customer_password;
     }
 
     public String getEmail() {
-        return email;
+        return customer_email;
     }
 
     public String getPhone_no() {
-        return phone_no;
+        return customer_phone_no;
     }
 
     public String getGender() {
-        return gender;
+        return customer_gender;
     }
 
     public int getAge() {
-        return age;
+        return customer_age;
     }
 
-    public int getID() {
-        return ID;
+    public int getCustomerID() {
+        return customer_ID;
     }
-
+//dbmanager==databasemanager
     public DBmanager getDbManager() {
-        return dbManager;
+        return dbManager;       
     }
 
     
-public  customer(){}
-
- public String register(String username, String password, String email, String phone_no, String gender, int age){
-        String validation = chechValidatetion(username,password,email,phone_no);
+ public String register(String customer_username, String customer_password, String customer_email, String customer_phone_no, String customer_gender, int customer_age){
+        String validation = checkValidatetion(customer_username,customer_password,customer_email,customer_phone_no);
 
             
         if(!validation.equals("validate"))
             return validation;
 
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.phone_no = phone_no;
-        this.gender = gender;
-        this.age = age;
+        this.customer_username = customer_username;
+        this.customer_password = customer_password;
+        this.customer_email = customer_email;
+        this.customer_phone_no = customer_phone_no;
+        this.customer_gender = customer_gender;
+        this.customer_age = customer_age;
 
         if(dbManager.addCustomer(this)) {
-            this.ID = dbManager.getCSTID(email,password);
+            this.customer_ID = dbManager.getCSTID(customer_email,customer_password);
             return "true";
         }
         else
             return "false";
     }
-    
-    public boolean logIn(String email, String password){
-        int id = dbManager.getCSTID(email,password);
+    //customer login//
+    public boolean logIn(String customer_email, String customer_password){
+        int id = dbManager.getCSTID(customer_email,customer_password);
         if(id != 0){
             ArrayList<String> object = dbManager.findCST(id);
-            this.username = object.get(0);
-            this.password = object.get(1);
-            this.gender = object.get(2);
-            this.age = Integer.parseInt(object.get(3));
-            this.email = object.get(4);
-            this.phone_no = object.get(5);
-            this.ID = id;
+            this.customer_username = object.get(0);
+            this.customer_password = object.get(1);
+            this.customer_gender = object.get(2);
+            this.customer_age = Integer.parseInt(object.get(3));
+            this.customer_email = object.get(4);
+            this.customer_phone_no = object.get(5);
+            this.customer_ID= id;
 
             return true;
         }
         return false;
     }
-     private String chechValidatetion(String username, String password, String email, String phone_no){
-        String passwordvalidation = passwordValidation(username,password);
+    
+     private String checkValidatetion(String customer_username, String customer_password, String customer_email, String customer_phone_no){
+        String passwordvalidation = passwordValidation(customer_username,customer_password);
 
-        if (dbManager.checkEmail(email)){
-            return "Email is exsit befor, please use anthor email ";
+        if (dbManager.checkEmail(customer_email)){
+            return "Email is exsit before, please use another email ";
         }
 
         if(!passwordvalidation.equals("Password is valid.")){
@@ -120,51 +121,52 @@ public  customer(){}
         }
 
 
-        if (phone_no.length() != 11) {
+        if (customer_phone_no.length() != 11) {
             return "Please enter validate phone number";
         }
 
         return "validate";
     }
-    private String passwordValidation(String userName, String password)
+    private String passwordValidation(String customer_userName, String customer_password)
     {
-        if (password.length() < 8) {
+        if (customer_password.length() < 8) {
             return "Password should be more than 8 characters in length.";
         }
-        if (password.indexOf(userName) > -1) {
+        if (customer_password.indexOf(customer_userName) > -1) {
             return "Password Should not be same as user name";
         }
         String upperCaseChars = "(.*[A-Z].*)";
-        if (!password.matches(upperCaseChars )) {
+        if (!customer_password.matches(upperCaseChars )) {
             return "Password should contain atleast one upper case alphabet";
         }
         String lowerCaseChars = "(.*[a-z].*)";
-        if (!password.matches(lowerCaseChars )) {
+        if (!customer_password.matches(lowerCaseChars )) {
             return "Password should contain atleast one lower case alphabet";
         }
         String numbers = "(.*[0-9].*)";
-        if (!password.matches(numbers )) {
+        if (!customer_password.matches(numbers )) {
             return "Password should contain atleast one number.";
         }
         String specialChars = "(.*[,~,!,@,#,$,%,^,&,*,(,),-,_,=,+,[,{,],},|,;,:,<,>,/,?].*$)";
-        if (!password.matches(specialChars )) {
+        if (!customer_password.matches(specialChars )) {
             return "Password should contain atleast one special character";
         }
 
-        this.password = password;
+        this.customer_password = customer_password;
         return "Password is valid.";
     }
-    public boolean update_profile(String username, String password, String email, String phone_no, String gender, int age){
+   // public boolean update_profile(String customer_username, String customer_password, String customer_email, String customer_phone_no, String customer_gender, int customer_age){
     
-    System.out.println(this.getID());
-  boolean done=dbManager.update_cst_profile(username,password,email,phone_no,gender,age,this.getID());
+   // System.out.println(this.getCustomerID());
+ // boolean done=dbManager.update_cst_profile(customer_username,customer_password,customer_email,customer_phone_no,customer_gender,customer_age,this.getCustomerID());
     
     
-     return done;
-    }
+   //  return done;
+//    }
 
     
 }
+
 
     
     
