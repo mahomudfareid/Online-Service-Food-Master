@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
+//dbmanager=databasemanager//
 public  class  DBmanager {
     private  String query;
     private Connection connection;
@@ -19,7 +19,7 @@ public  class  DBmanager {
     private DBmanager(){
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(datasource_url,"root","");
+            connection = DriverManager.getConnection(datasource_url,"root","root");
             statement = connection.createStatement();
 
         }catch (Exception e){
@@ -35,9 +35,9 @@ public  class  DBmanager {
     }
 
     
-    public String getItemPrice(String nameٍ){
+    public String getItemPrice(String item_nameٍ){
         String price = null;
-        String temp = "'" + nameٍ + "'";
+        String temp = "'" + item_nameٍ + "'";
         try{
             query = "SELECT item_price FROM items where item_name =" + temp;
             resultSet = statement.executeQuery(query);
@@ -49,15 +49,15 @@ public  class  DBmanager {
         }
         return price;
     }
- public boolean addCustomer(customer customer){
-        String name = "'" + customer.getUsername() + "'";
-        String password = "'" + customer.getPassword() + "'";
-        String gender = "'" + customer.getGender() + "'";
-        int age = customer.getAge();
-        String phone = "'" + customer.getPhone_no() + "'";
-        String email = "'" + customer.getEmail() + "'";
+ public boolean addCustomer(customer user){
+        String name = "'" + user.getUsername() + "'";
+        String password = "'" + user.getPassword() + "'";
+        String gender = "'" + user.getGender() + "'";
+        int age = user.getAge();
+        String phone = "'" + user.getPhone_no() + "'";
+        String email = "'" + user.getEmail() + "'";
 
-        int id ;
+        int Customerid ;
 
         try {
             query = "INSERT INTO cst(cst_gender,cst_age,cst_email,cst_phone_no,cst_password,cst_username) VALUES(" +
@@ -75,12 +75,12 @@ public  class  DBmanager {
  
  public boolean add_item(String name, String price){
     
-      String it_name = "'" +name + "'";
-        String it_price = "'" + price+ "'";
+      String item_name = "'" +name + "'";
+        String item_price = "'" + price+ "'";
     
     
     try{
-    query = "insert into items(item_name,item_price) values ("+it_name+","+it_price+")";
+    query = "insert into items(item_name,item_price) values ("+item_name+","+item_price+")";
      statement.execute(query);
    return true;
     
@@ -93,18 +93,18 @@ public  class  DBmanager {
     
   }
 
-      public boolean checkEmail(String email){
-        String temp = "'"+email+"'";
+      public boolean checkEmail(String Customeremail){
+        String temp = "'"+Customeremail+"'";
         try {
-            String em = null;
+            String email = null;
             query = "SELECT cst_email FROM cst WHERE cst_email = " + temp;
             resultSet = statement.executeQuery(query);
             while (resultSet.next()){
-                em = resultSet.getString("cst_email");
-                System.out.println(em);
+                email = resultSet.getString("cst_email");
+                System.out.println(email);
             }
 
-            if (em != null)
+            if (email != null)
                 return true;
 
         }catch (Exception e){
@@ -113,18 +113,18 @@ public  class  DBmanager {
         return false;
     }
 public String getItemName(int item_code){
-        String name = null;
+        String item_name = null;
         try{
             query = "SELECT item_name FROM items where item_id = " + item_code;
             resultSet = statement.executeQuery(query);
             while (resultSet.next())
-                name = resultSet.getString("item_name");
+                item_name = resultSet.getString("item_name");
         }catch (Exception e) {
             System.out.println(e);
         }
-        return name;
+        return item_name;
     }
-
+//CST is customer table
     public int getCSTID(String email, String password){
         String temp_email = "'" + email + "'";
         String temp_pass = "'" + password + "'";
@@ -143,10 +143,10 @@ public String getItemName(int item_code){
     }
 
     
-    public ArrayList<String> findCST(int id){
+    public ArrayList<String> findCST(int Customerid){
         ArrayList<String> customer = new ArrayList<>();
         try{
-            query = "SELECT * FROM cst WHERE cst_id  = " + id ;
+            query = "SELECT * FROM cst WHERE cst_id  = " + Customerid ;
             resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
                 String  username = resultSet.getString("cst_username");
@@ -168,16 +168,16 @@ public String getItemName(int item_code){
         }
         return customer;
     }
-   public boolean update_cst_profile(String username, String password, String email, String phone_no, String gender, int age, int id){
-    String name_t = "'" + username + "'";
-        String password_t = "'" + password + "'";
-        String gender_t = "'" + gender+ "'";
-        int age_t = age;
-        String phone_t = "'" + phone_no + "'";
-        String email_t = "'" + email + "'";
+   public boolean update_cst_profile(String Customer_username, String Customer_password, String Customer_email, String Customer_phone_no, String Customer_gender, int Customer_age, int Customer_id){
+    String name_t = "'" + Customer_username + "'";
+        String password_t = "'" + Customer_password + "'";
+        String gender_t = "'" + Customer_gender+ "'";
+        int age_t = Customer_age;
+        String phone_t = "'" + Customer_phone_no + "'";
+        String email_t = "'" + Customer_email + "'";
     try{
      query = "UPDATE cst SET cst_gender ="+gender_t+",cst_age="+age_t+",cst_email="+email_t+",cst_phone_no= "+phone_t+",cst_password="+password_t+",cst_username="+name_t+
-" WHERE cst_id=" + id;
+" WHERE cst_id=" + Customer_id;
      System.out.println(query);
         statement.execute(query);
         return true;
@@ -188,6 +188,7 @@ public String getItemName(int item_code){
     
  
    }
+   //delete item
     public boolean del_item(String name){
    
    String it_name = "'" +name + "'";
@@ -204,6 +205,7 @@ public String getItemName(int item_code){
     return false;  
    
    } 
+    
     public String getItemId(String nameٍ){
         String id =null ;
         String temp = "'" + nameٍ + "'";
@@ -218,29 +220,30 @@ public String getItemName(int item_code){
         }
         return id;
     }
-//     public List<Item> getMenu()
-//    {
-//     List<Item> menu = new ArrayList<>();
-//   
-//     try {
-//         query = "SELECT * FROM items ";
-//         resultSet = statement.executeQuery(query);
-//         while (resultSet.next())
-//         {
-//             menu.add(new Item( resultSet.getString("item_name"),
-//                     resultSet.getString("item_price")));
-//         }
-//     }catch (Exception e){
-//         System.out.println(e);
-//     }
-//      System.out.println(menu.size());
-//        return menu;
-//    }
     
-     public boolean update_item(String item_name , String item_price, String id){
+   public List<item> getMenu()
+  {
+     List<item> menu = new ArrayList<>();
+   
+     try {
+        query = "SELECT * FROM items ";
+       resultSet = statement.executeQuery(query);
+        while (resultSet.next())
+        {
+             menu.add(new item( resultSet.getString("item_name"),
+             resultSet.getString("item_price")));
+         }
+    }catch (Exception e){
+         System.out.println(e);
+    }
+     System.out.println(menu.size());
+       return menu;
+    }
+    //update item//
+     public boolean update_item(String item_name , String item_price, String item_id){
         String it_name = "'" + item_name + "'";
         String it_price = "'" + item_price+ "'";
-        String it_id = "'" + id + "'";
+        String it_id = "'" + item_id + "'";
 
         
         
@@ -262,7 +265,6 @@ public String getItemName(int item_code){
     }
     
     }
-    
     
    
     
