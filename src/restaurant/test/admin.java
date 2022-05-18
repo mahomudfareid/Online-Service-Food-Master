@@ -5,7 +5,7 @@
  */
 package restaurant.test;
 
-public class admin {
+public class admin  extends customer {
    
      private DBmanager dbManager = DBmanager.createInstance();
      private static admin instance;
@@ -18,29 +18,37 @@ public class admin {
      
      }
      
+   //  @Override
+     public boolean update_profile(String customer_username, String customer_password, String customer_email, String customer_phone_no, String customer_gender, int customer_age){
     
+    System.out.println(this.getCustomerID());
+  boolean done=dbManager.update_cst_profile(customer_username,customer_password,customer_email,customer_phone_no,customer_gender,customer_age,this.getCustomerID());
+    
+    
+     return done;
+    }
       
-      public boolean update_menu(String name,String price,String  id){
+      public boolean update_menu(String item_name,String item_price,String  item_id){   //  <<<<<
     
     
-      return dbManager.update_item(name, price, id);
+      return dbManager.update_item(item_name, item_price, item_id); //  <<<<<
     
     
     }
       
-      public boolean add_item(String name , String price){
+      public boolean add_item(String item_name , String item_price){  //  <<<<<
       
       
-     return dbManager.add_item(name, price);
+     return dbManager.add_item(item_name, item_price);//  <<<<<
       
       
       
       }
       
-      public boolean delete_item(String name){
+      public boolean delete_item(String item_name){//  <<<<<
       
       
-      return dbManager.del_item(name);
+      return dbManager.del_item(item_name);//  <<<<<
       
       }
     
