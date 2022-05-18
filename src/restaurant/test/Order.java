@@ -7,8 +7,14 @@
 
 
 
+package restaurant.test;
+
+import restaurant.test.DBmanager;
+
+
 public class Order {
-    private DBManager dbManager = DBManager.createInstance();
+    //dbmanager=databasemanager
+    private DBmanager dbManager = DBmanager.createInstance();
 
     public double[] getCard() {
         return card;
@@ -18,12 +24,12 @@ public class Order {
         this.card = card;
     }
 
-    public static int getI() {
-        return i;
+    public static int getItem() {
+        return item;
     }
 
-    public static void setI(int i) {
-        Order.i = i;
+    public static void setItem(int item) {
+        Order.item = item;
     }
 
     public double getSum() {
@@ -35,7 +41,7 @@ public class Order {
     }
     private double card[]= new double [10];
     private String reciept[][]= new String [10][2];
-    static int i=0;
+    static int item=0;
 
     public String[][] getReciept() {
         return reciept;
@@ -43,33 +49,52 @@ public class Order {
     private double sum;
     public void addToCard(String itemName , int amount )
     {  
-        double total_price = 0.0;
+        //double total_price = 0.0;
         try{
-        int x ; // get price from db
-            x = Integer.parseInt(dbManager.getItemPrice(itemName));
-        sum = amount * x;
-        total_price += sum; 
-        card[i]=total_price;
-        reciept[i][0]=itemName; // get item name from db
-        reciept[i][1]=String.valueOf(amount);
-        i++;
+        //int x ; // get price from db
+         //   x = Integer.parseInt(dbManager.getItemPrice(itemName));
+       // sum = amount * x;
+       // total_price += sum; 
+       // card[item]=total_price;
+        reciept[item][0]=itemName; // get item name from db
+        reciept[item][1]=String.valueOf(amount);
+        item++;
        // r.addTrans(itemCode, total_price);
         }
         catch(NumberFormatException e)
         {
             System.out.print("Number format exception");
         }
+        }  
+    
+    public void GetTotalPrice(String itemName , int amount){
+      double total_price = 0.0;
+        try{
+        int x ; // get price from db
+            x = Integer.parseInt(dbManager.getItemPrice(itemName));
+        sum = amount * x;
+        total_price += sum;
+        card[item]=total_price;
+        }
         
-    }  
-    public double Buy(Order o)
+         catch(NumberFormatException e)
+        {
+            System.out.print("Number format exception");
+        }
+    
+    }
+    
+    
+    
+    public double Item_Amount(Order o)
     {  
-       double total = 0;
+       double total_items = 0;
        double []card= o.getCard();
        for (int i=0;i<card.length;i++)
        {
-           total+=card[i];
+           total_items+=card[i];
        }
-       return total;
+       return total_items;
     }
    
 }
